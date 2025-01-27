@@ -2,7 +2,6 @@ package gr.codingfactory.rest.homefinder.resources;
 
 import gr.codingfactory.rest.homefinder.models.Area;
 import gr.codingfactory.rest.homefinder.services.AreaService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
