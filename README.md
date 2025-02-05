@@ -1,9 +1,21 @@
-# HomeFinder_Backend
+# Introduction
+The sections below describe the steps that must be followed in order to setup the backend API service using WildFly as an application server, either manually or using Docker containers.
 
-## Introduction
-The sections below describe the steps that must be followed in order to setup the backend API service using WildFly as an application server.
+## Docker setup
+- Navigate into the files `pom.xml` and `src\main\resources\META-INF\persistence.xml` and verify that the local setup option is commented-out.
+- If you have a local instance of MySQL server running, this will need to be stopped.
+- From the parent directory execute:
+```
+docker-compose up
+```
 
-## Database setup
+The backend service and a MySQL server instance should be running. 
+
+## Manual configuration
+
+- Before starting into the files `pom.xml` and `src\main\resources\META-INF\persistence.xml` and verify that the Docker setup option is commented-out.
+
+### Database setup
 
 - Download and install MySQL from https://dev.mysql.com/downloads/installer/
 - Download and install MySQL Workbench from https://dev.mysql.com/downloads/workbench/
@@ -12,7 +24,7 @@ The sections below describe the steps that must be followed in order to setup th
 CREATE SCHEMA homefinder
 ```
 
-## WildFly configuration
+### WildFly configuration
 
 - Download WildFly from https://www.wildfly.org/ (version used for the project 33.0.1) and unzip the downloaded file (see more in https://docs.wildfly.org/35/Installation_Guide.html#Zipped_Installation)
 - Navigate to `bin` in the extracted folder.
@@ -43,7 +55,7 @@ Password: root
 ```
 Click on Next. Test the connection to make sure it works and complete the wizard.
 
-## Application deployment
+### Application deployment
 
 - Download and install Apache NetBeans from https://netbeans.apache.org/front/main/download/
 - Download apache-maven from https://maven.apache.org/download.cgi
