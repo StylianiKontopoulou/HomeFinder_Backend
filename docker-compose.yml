@@ -1,0 +1,53 @@
+version: '3.8' 
+services: 
+  homefinder-api: 
+    build: 
+      dockerfile: Dockerfile
+      context: .
+      args:
+        WILDFLY_USER: admin
+        WILDFLY_PASS: admin
+        DB_NAME: homefinder
+        DB_USER: root
+        DB_PASS: root
+        DB_URI: mysql:3306
+    networks:
+      - homefinder-network
+    ports:
+      - "8080:8080"
+      - "9990:9990"
+    depends_on:
+      mysql:
+        condition: service_started
+      flyway:
+        condition: service_completed_successfully
+
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: homefinder
+    networks:
+      - homefinder-network
+    
+  flyway:
+    image: flyway/flyway:latest
+    depends_on:
+      mysql: 
+        condition: service_started
+    environment:
+      - FLYWAY_URL=jdbc:mysql://mysql:3306/homefinder?allowPublicKeyRetrieval=true&useSSL=false
+      - FLYWAY_USER=root
+      - FLYWAY_PASSWORD=root
+    networks:
+      - homefinder-network
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    command: -connectRetries=60 migrate
+
+networks:
+  homefinder-network:
+    driver: bridge

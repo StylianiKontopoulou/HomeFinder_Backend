@@ -18,7 +18,10 @@
         <mysql.version>8.0.33</mysql.version>
         <logback.version>1.2.11</logback.version>
         <jackson.version>2.17.2</jackson.version>
-        <mysql.url>jdbc:mysql://127.0.0.1:3306/HomeFinder</mysql.url>
+        <!-- Local execution setup -->
+        <!-- <mysql.url>jdbc:mysql://127.0.0.1:3306/HomeFinder</mysql.url> -->
+        <!-- Docker container setup -->
+        <mysql.url>jdbc:mysql://mysql:3306/HomeFinder</mysql.url>
         <mysql.user>root</mysql.user>
         <mysql.password>root</mysql.password>
     </properties>
