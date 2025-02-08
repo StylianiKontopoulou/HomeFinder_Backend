@@ -39,7 +39,7 @@ RUN $JBOSS_HOME/bin/add-user.sh -u $WILDFLY_USER -p $WILDFLY_PASS --silent
 
 # Configure WildFly server
 RUN echo "=> Starting WildFly server" && \
-    bash -c '$JBOSS_HOME/bin/standalone.sh &' && \
+    bash -c '$JBOSS_HOME/bin/standalone.sh -c standalone-microprofile.xml &' && \
     echo "=> Waiting for the server to boot" && \
     bash -c 'until `$JBOSS_CLI -c ":read-attribute(name=server-state)" 2> /dev/null | grep -q running`; do echo `$JBOSS_CLI -c ":read-attribute(name=server-state)" 2> /dev/null`; sleep 1; done' && \
     echo "=> Downloading MySQL driver" && \
@@ -72,4 +72,4 @@ COPY --from=build /app/target/*.war $DEPLOYMENT_DIR
 EXPOSE 8080 9990
 
 # Boot WildFly in the standalone mode and bind to all interfaces
-CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
+CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-c", "standalone-microprofile.xml", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]

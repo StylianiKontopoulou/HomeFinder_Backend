@@ -40,6 +40,13 @@
             <version>2.1.6</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.eclipse.microprofile.openapi</groupId>
+            <artifactId>microprofile-openapi-api</artifactId>
+            <version>4.0</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Add an implementation for Jakarta REST (e.g., Jersey) -->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
