@@ -1,4 +1,6 @@
-# Introduction
+[[_TOC_]]
+
+# Installation
 The sections below describe the steps that must be followed in order to setup the backend API service using WildFly as an application server, either manually or using Docker containers.
 
 ## Docker setup
@@ -76,3 +78,8 @@ mvn flyway:migrate
 ```
 - Click on Run project to deploy the application to WildFly and start the backend service.
 
+# OpenAPI documentation
+OpenAPI documentation can be downloaded in .yml format from `http://localhost:8080/openapi`.
+
+# Swagger
+Swagger UI can be reached from `http://localhost:8080/HomeFinder/swagger/`.
