@@ -1,5 +1,3 @@
-[[_TOC_]]
-
 # Installation
 The sections below describe the steps that must be followed in order to setup the backend API service using WildFly as an application server, either manually or using Docker containers.
 
