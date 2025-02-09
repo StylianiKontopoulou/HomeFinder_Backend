@@ -1,5 +1,8 @@
+# Introduction
+In the sections below, instructions for API setup, OpenAPI and swagger documentation are provided.
+
 # Installation
-The sections below describe the steps that must be followed in order to setup the backend API service using WildFly as an application server, either manually or using Docker containers.
+The sub-sections below describe the steps that must be followed in order to setup the backend API service using WildFly as an application server, either manually or using Docker containers.
 
 ## Docker setup
 - Navigate into the files `pom.xml` and `src\main\resources\META-INF\persistence.xml` and verify that the local setup option is commented-out.
@@ -10,6 +13,8 @@ docker-compose up
 ```
 
 The backend service and a MySQL server instance should be running. 
+
+In order to persist the application database even after deleting the container, you will need to add a volume for `mysql` service for the path `/var/lib/mysql` in `docker-compose.yml`.
 
 ## Manual configuration
 
