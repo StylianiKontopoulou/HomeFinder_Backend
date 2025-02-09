@@ -7,15 +7,7 @@ import gr.codingfactory.rest.homefinder.services.PropertyService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -24,10 +16,17 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+
 @Slf4j
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/properties")
+@Tag(name = "Properties", description = "Operations related to property management")
 public class PropertyResource {
 
     @Inject
@@ -38,9 +37,13 @@ public class PropertyResource {
 
     @POST
     @RolesAllowed("ALL")
+    @Operation(summary = "Create a new property", description = "Adds a new property to the system.")
+    @APIResponses({
+        @APIResponse(responseCode = "201", description = "Property created successfully"),
+        @APIResponse(responseCode = "500", description = "Internal server error while creating property")
+    })
     public Response createProperty(Property req) {
         try {
-            
             User user = (User) requestContext.getAttribute("currentUser");
             req.setUser(user);
             req.setIsActive(Boolean.TRUE);
@@ -56,10 +59,18 @@ public class PropertyResource {
     @GET
     @Path("/{propertyId}")
     @RolesAllowed("ALL")
-    public Response getPropertyDetails(@PathParam("propertyId") Long propertyId) {
+    @Operation(summary = "Get property details", description = "Retrieves details of a property by its ID.")
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "Successfully retrieved property details"),
+        @APIResponse(responseCode = "403", description = "Access forbidden for this property"),
+        @APIResponse(responseCode = "404", description = "Property not found"),
+        @APIResponse(responseCode = "500", description = "Internal server error")
+    })
+    public Response getPropertyDetails(
+        @Parameter(description = "ID of the property to retrieve", required = true)
+        @PathParam("propertyId") Long propertyId) {
         try {
             Property property = propertyService.getPropertyById(propertyId);
-
             if (property != null) {
                 User user = (User) requestContext.getAttribute("currentUser");
                 if (user.getUserType().equals(UserTypeEnum.PROPERTY_OWNER) && !property.getUser().getId().equals(user.getId())) {
@@ -78,7 +89,15 @@ public class PropertyResource {
     @PUT
     @Path("/{propertyId}")
     @RolesAllowed("ALL")
-    public Response updatePropertyDetails(@PathParam("propertyId") Long propertyId, Property property) {
+    @Operation(summary = "Update property details", description = "Updates the information of an existing property.")
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "Property updated successfully"),
+        @APIResponse(responseCode = "500", description = "Internal server error while updating property")
+    })
+    public Response updatePropertyDetails(
+        @Parameter(description = "ID of the property to update", required = true)
+        @PathParam("propertyId") Long propertyId,
+        Property property) {
         try {
             User user = (User) requestContext.getAttribute("currentUser");
             property.setUser(user);
@@ -94,7 +113,16 @@ public class PropertyResource {
     @DELETE
     @Path("/{propertyId}")
     @RolesAllowed("ALL")
-    public Response deleteProperty(@PathParam("propertyId") Long propertyId) {
+    @Operation(summary = "Delete a property", description = "Removes a property from the system.")
+    @APIResponses({
+        @APIResponse(responseCode = "204", description = "Property deleted successfully"),
+        @APIResponse(responseCode = "403", description = "Access forbidden for this property"),
+        @APIResponse(responseCode = "404", description = "Property not found"),
+        @APIResponse(responseCode = "500", description = "Internal server error while deleting property")
+    })
+    public Response deleteProperty(
+        @Parameter(description = "ID of the property to delete", required = true)
+        @PathParam("propertyId") Long propertyId) {
         Property property = propertyService.getPropertyById(propertyId);
         if (property == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -113,7 +141,14 @@ public class PropertyResource {
     }
 
     @GET
-    public Response listProperties(@QueryParam("userId") Optional<Long> userId) {
+    @Operation(summary = "List all properties", description = "Retrieves a list of properties, optionally filtered by user.")
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "Successfully retrieved list of properties"),
+        @APIResponse(responseCode = "500", description = "Internal server error while listing properties")
+    })
+    public Response listProperties(
+        @Parameter(description = "User ID to filter properties by owner", required = false)
+        @QueryParam("userId") Optional<Long> userId) {
         try {
             List<Property> properties;
             if (userId.isPresent()) {
@@ -123,7 +158,7 @@ public class PropertyResource {
             }
             return Response.ok(properties).build();
         } catch (Exception e) {
-            log.error("Error listing owner properties", e);
+            log.error("Error listing properties", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }

@@ -1,6 +1,6 @@
 package gr.codingfactory.rest.homefinder.resources;
 
-import gr.codingfactory.rest.homefinder.resources.AreaRersource;
+import gr.codingfactory.rest.homefinder.resources.AreaResource;
 import gr.codingfactory.rest.homefinder.models.Area;
 import gr.codingfactory.rest.homefinder.services.AreaService;
 import jakarta.ws.rs.core.Response;
@@ -24,7 +24,7 @@ public class AreaResourceTest {
     private AreaService areaService;
 
     @InjectMocks
-    private AreaRersource areaResource;
+    private AreaResource areaResource;
 
     private List<Area> areas;
 

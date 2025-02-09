@@ -5,10 +5,11 @@ FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 
 # Copy the pom.xml and download dependencies
-COPY pom.xml .
+COPY pom.xml . 
 COPY src ./src
 RUN mvn clean package -DskipTests
 
+# Use WildFly as the base image
 FROM quay.io/wildfly/wildfly:latest
 
 ARG WILDFLY_USER
@@ -31,7 +32,6 @@ ENV DB_URI ${DB_URI}
 ENV MYSQL_VERSION 8.0.30
 ENV JBOSS_CLI /opt/jboss/wildfly/bin/jboss-cli.sh
 ENV DEPLOYMENT_DIR /opt/jboss/wildfly/standalone/deployments/
-#ENV JAVA_OPTS
 
 # Setup WildFly Admin Console
 RUN echo "=> Adding WildFly administrator"
